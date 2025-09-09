@@ -34,7 +34,6 @@
         </a>
     </li>
 
-
     <li class="menu-title">Pages</li>
 
     <li>
@@ -53,7 +52,6 @@
         </div>
     </li>
 
-
     <li>
         <a href="#WareHouse" data-bs-toggle="collapse">
             <i data-feather="users"></i>
@@ -69,7 +67,6 @@
             </ul>
         </div>
     </li>
-
 
     <li>
         <a href="#Supplier" data-bs-toggle="collapse">
@@ -103,7 +100,6 @@
         </div>
     </li>
 
-
     <li>
         <a href="#Product" data-bs-toggle="collapse">
             <i data-feather="users"></i>
@@ -118,6 +114,26 @@
 
        <li>
         <a href="{{ route('all.product') }}" class="tp-link">All Product</a>
+       </li>
+
+            </ul>
+        </div>
+    </li>
+
+    <li>
+        <a href="#Purchase" data-bs-toggle="collapse">
+            <i data-feather="users"></i>
+            <span> Purchase Manage </span>
+            <span class="menu-arrow"></span>
+        </a>
+        <div class="collapse" id="Purchase">
+            <ul class="nav-second-level">
+        <li>
+        <a href="{{ route('all.purchase') }}" class="tp-link">All Purchase</a>
+       </li>
+
+       <li>
+        <a href="{{ route('all.product') }}" class="tp-link">Return Purchase</a>
        </li>
 
             </ul>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\WareHouseController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Backend\PurchaseController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -117,6 +118,22 @@ Route::middleware('auth')->group(function () {
         Route::get('/delete/product/{id}', 'DeleteProduct')->name('delete.product');
 
         Route::get('/details/product/{id}', 'DetailsProduct')->name('details.product');
+    });
+/*...................................................................................... */
+//purchase routes
+    Route::controller(PurchaseController::class)->group(function () {
+        Route::get('/all/purchase', 'AllPurchase')->name('all.purchase');
+
+        Route::get('/add/purchase', 'AddPurchase')->name('add.purchase');
+        Route::get('/purchase/product/search', 'PurchaseProductSearch')->name('purchase.product.search');
+        Route::post('/store/purchase', 'StorePurchase')->name('store.purchase');
+
+        // Route::get('/edit/product/{id}', 'EditProduct')->name('edit.product');
+        // Route::post('/update/product', 'UpdateProduct')->name('update.product');
+
+        // Route::get('/delete/product/{id}', 'DeleteProduct')->name('delete.product');
+
+        // Route::get('/details/product/{id}', 'DetailsProduct')->name('details.product');
     });
 
 });

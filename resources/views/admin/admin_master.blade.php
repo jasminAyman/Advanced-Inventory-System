@@ -50,15 +50,15 @@
             <!-- ============================================================== -->
 
     <div class="content-page">
-    
-     @yield('admin')          
+
+     @yield('admin')
 
      <!-- content -->
 
                 <!-- Footer Start -->
-    @include('admin.body.footer')          
+    @include('admin.body.footer')
                 <!-- end Footer -->
-                
+
             </div>
             <!-- ============================================================== -->
             <!-- End Page content -->
@@ -85,8 +85,9 @@
         <!-- Widgets Init Js -->
         <script src="{{ asset('backend/assets/js/pages/analytics-dashboard.init.js')}}"></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="{{ asset('backend/assets/js/code.js') }}"></script>
+        <script src="{{ asset('backend/assets/js/custome.js') }}"></script>
 
         <script src="{{ asset('backend/assets/js/validate.min.js') }}"></script>
         <!-- App js-->
@@ -112,22 +113,22 @@
             case 'info':
             toastr.info(" {{ Session::get('message') }} ");
             break;
-        
+
             case 'success':
             toastr.success(" {{ Session::get('message') }} ");
             break;
-        
+
             case 'warning':
             toastr.warning(" {{ Session::get('message') }} ");
             break;
-        
+
             case 'error':
             toastr.error(" {{ Session::get('message') }} ");
-            break; 
+            break;
          }
-         @endif 
+         @endif
         </script>
-        
+
 
     </body>
 </html>
