@@ -56,7 +56,7 @@ class PurchaseController extends Controller
         ]);
 
         try {
-            
+
             DB::beginTransaction();
 
             $grandTotal = 0;
@@ -106,13 +106,101 @@ class PurchaseController extends Controller
                 'message' => 'Purchase Stored Successfully',
                 'alert-type' => 'success'
             );
-    
+
+            return redirect()->route('all.purchase')->with($notification);
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    //End Method
+
+    public function EditPurchase($id){
+        $editData = Purchase::with('purchaseItems.product')->findOrfail($id);
+        $warehouses = WareHouse::all();
+        $suppliers = Supplier::all();
+
+        return view('admin.backend.purchase.edit_purchase', compact('suppliers', 'warehouses', 'editData'));
+    }
+    //End Method
+
+    public function UpdatePurchase(Request $request, $id){
+        $request->validate([
+            'date' => "required|date",
+            'status' => "required",
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $purchase = Purchase::findOrfail($id);
+            $purchase->update([
+                'date' => $request->date,
+                'warehouse_id' => $request->warehouse_id,
+                'supplier_id' => $request->supplier_id,
+                'discount' => $request->discount ?? 0,
+                'shipping' => $request->shipping ?? 0,
+                'status' => $request->status,
+                'note' => $request->note,
+                'grand_total' => $request->grand_total,
+            ]);
+
+            ///Get old Purchase Items
+            $purchaseOldItems = PurchaseItem::where('purchase_id', $purchase->id)->get();
+
+            ///Loop for old purchase items and decrement product quantity
+            foreach($purchaseOldItems as $oldItem){
+                $product = Product::find($oldItem->product_id);
+                if($product){
+                    $product->decrement('product_quantity', $oldItem->quantity);
+                    //Decrement old quantity
+                }
+            }
+
+            //Delete old purchase items
+            PurchaseItem::where('purchase_id', $purchase->id)->delete();
+
+            //Loop for new products and insert new purchase items
+            foreach($request->products as $product_id => $productData){
+                purchaseItem::create([
+                    'purchase_id' => $purchase->id,
+                    'product_id' => $product_id,
+                    'net_unit_cost' => $productData['net_unit_cost'],
+                    'stock' => $productData['stock'],
+                    'quantity' => $productData['quantity'],
+                    'discount' => $productData['discount'] ?? 0,
+                    'subtotal' => $productData['subtotal'],
+                ]);
+
+                //Update product stock with incrementing new quantity
+                $product = Product::find($product_id);
+                if($product){
+                    $product->increment('product_quantity', $productData['quantity']);
+                    //increment new quantity
+                }
+            }
+
+            DB::commit();
+
+            $notification = array(
+                'message' => 'Purchase Updated Successfully',
+                'alert-type' => 'success'
+            );
+
             return redirect()->route('all.purchase')->with($notification);
         } 
         catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
-        }
+        }     
+    }
+    //End Method
+
+    public function DetailsPurchase($id){
+        $purchase = Purchase::with(['supplier', 'purchaseItems.product'])->find($id);
+        return view('admin.backend.purchase.purchase_details', compact('purchase'));
     }
     //End Method
 }

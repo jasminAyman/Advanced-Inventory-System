@@ -128,12 +128,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/purchase/product/search', 'PurchaseProductSearch')->name('purchase.product.search');
         Route::post('/store/purchase', 'StorePurchase')->name('store.purchase');
 
-        // Route::get('/edit/product/{id}', 'EditProduct')->name('edit.product');
-        // Route::post('/update/product', 'UpdateProduct')->name('update.product');
+        Route::get('/edit/purchase/{id}', 'EditPurchase')->name('edit.purchase');
+        Route::post('/update/purchase/{id}', 'UpdatePurchase')->name('update.purchase');
 
         // Route::get('/delete/product/{id}', 'DeleteProduct')->name('delete.product');
 
-        // Route::get('/details/product/{id}', 'DetailsProduct')->name('details.product');
+        Route::get('/details/purchase/{id}', 'DetailsPurchase')->name('details.purchase');
     });
 
 });
