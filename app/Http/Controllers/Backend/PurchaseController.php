@@ -13,6 +13,7 @@ use App\Models\WareHouse;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseController extends Controller
 {
@@ -190,17 +191,56 @@ class PurchaseController extends Controller
             );
 
             return redirect()->route('all.purchase')->with($notification);
-        } 
+        }
         catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
-        }     
+        }
+    }
+    //End Method
+
+    public function DeletePurchase($id){
+
+        try {
+            DB::beginTransaction();
+            $purchase = Purchase::findOrFail($id);
+            $purchaseItems = PurchaseItem::where('purchase_id', $id)->get();
+
+            foreach($purchaseItems as $item){
+                $product = Product::find($item->product_id);
+                if($product){
+                    $product->decrement('product_quantity', $item->quantity);
+                }
+            }
+            PurchaseItem::where('purchase_id', $id)->delete();
+            $purchase->delete();
+            DB::commit();
+
+            $notification = array(
+                'message' => 'Purchase Deleted Successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('all.purchase')->with($notification);
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
     //End Method
 
     public function DetailsPurchase($id){
         $purchase = Purchase::with(['supplier', 'purchaseItems.product'])->find($id);
         return view('admin.backend.purchase.purchase_details', compact('purchase'));
+    }
+    //End Method
+
+    public function InvoicePurchase($id){
+        $purchase = Purchase::with(['supplier', 'warehouse', 'purchaseItems.product'])->find($id);
+
+        $pdf = Pdf::loadView('admin.backend.purchase.invoice_pdf', compact('purchase'));
+        return $pdf->download('purchase_'.$id.'.pdf');
     }
     //End Method
 }
