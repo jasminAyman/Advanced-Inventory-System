@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\PurchaseController;
+use App\Http\Controllers\Backend\ReturnPurchaseController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -135,6 +136,22 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/details/purchase/{id}', 'DetailsPurchase')->name('details.purchase');
         Route::get('/invoice/purchase/{id}', 'InvoicePurchase')->name('invoice.purchase'); //to print purchase as pdf
+    });
+/*...................................................................................... */
+//return purchase routes
+    Route::controller(ReturnPurchaseController::class)->group(function () {
+        Route::get('/all/return/purchase', 'AllReturnPurchase')->name('all.return.purchase');
+
+        Route::get('/add/return/purchase', 'AddReturnPurchase')->name('add.return.purchase');
+        Route::post('/store/return/purchase', 'StoreReturnPurchase')->name('store.return.purchase');
+
+        Route::get('/edit/return/purchase/{id}', 'EditReturnPurchase')->name('edit.return.purchase');
+        Route::post('/update/return/purchase/{id}', 'UpdateReturnPurchase')->name('update.return.purchase');
+
+        Route::get('/delete/return/purchase/{id}', 'DeleteReturnPurchase')->name('delete.return.purchase');
+
+        Route::get('/details/return/purchase/{id}', 'DetailsReturnPurchase')->name('details.return.purchase');
+        Route::get('/invoice/return/purchase/{id}', 'InvoiceReturnPurchase')->name('invoice.return.purchase'); //to print purchase as pdf
     });
 
 });
