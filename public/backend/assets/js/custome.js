@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 productList.innerHTML = "";
                 if(data.length > 0){
                     data.forEach(product => {
-                        let item = `<a href="#" class="list-group-item list-group-item-action product-item" 
+                        let item = `<a href="#" class="list-group-item list-group-item-action product-item"
                         data-id="${product.id}"
                         data-code="${product.code}"
                         data-name="${product.name}"
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
 
-    ///// Add Product in to the table 
+    ///// Add Product in to the table
     function addProductToTable(productElement) {
         let productId = productElement.getAttribute("data-id");
         let productCode = productElement.getAttribute("data-code");
@@ -78,10 +78,10 @@ document.addEventListener("DOMContentLoaded", function(){
       let row = `
       <tr data-id="${productId}">
           <td>
-              ${productCode} - ${productName} 
+              ${productCode} - ${productName}
               <button type="button" class="btn btn-primary btn-sm edit-discount-btn"
-                  data-id="${productId}" 
-                  data-name="${productName}" 
+                  data-id="${productId}"
+                  data-name="${productName}"
                   data-cost="${netUnitCost}"
                   data-bs-toggle="modal">
                   <span class="mdi mdi-book-edit "></span>
@@ -114,8 +114,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
         orderItemsTableBody.innerHTML += row;
         productList.innerHTML = "";
-        productSearchInput.value = ""; 
-        
+        productSearchInput.value = "";
+
         updateEvents();
         updateGrandTotal();
     }
@@ -129,14 +129,14 @@ document.addEventListener("DOMContentLoaded", function(){
                     let qty = parseInt(row.querySelector(".qty-input").value) || 1;
                     let unitCost = parseFloat(row.querySelector(".qty-input").getAttribute("data-cost")) || 0;
                     let discount = parseFloat(row.querySelector(".discount-input").value) || 0;
-    
+
                     let subtotal = (unitCost * qty) - discount;
                     row.querySelector(".subtotal").textContent = subtotal.toFixed(2);
-    
+
                     updateGrandTotal();
               });
         });
-    
+
         // Increment quantity
         document.querySelectorAll(".increment-qty").forEach(button => {
               button.addEventListener("click", function () {
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     }
               });
         });
-    
+
         // Decrement quantity
         document.querySelectorAll(".decrement-qty").forEach(button => {
               button.addEventListener("click", function () {
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     }
               });
         });
-    
+
         // Remove product row
         document.querySelectorAll(".remove-product").forEach(button => {
               button.addEventListener("click", function () {
@@ -171,54 +171,96 @@ document.addEventListener("DOMContentLoaded", function(){
               });
         });
     }
-    
+
     function updateSubtotal(row) {
         let qty = parseFloat(row.querySelector(".qty-input").value);
         let discount = parseFloat(row.querySelector(".discount-input").value) || 0;
         let netUnitCost = parseFloat(row.querySelector(".qty-input").dataset.cost);
-    
+
         // Calculate subtotal after discount
         let subtotal = (netUnitCost * qty) - discount;
         row.querySelector(".subtotal").innerText = subtotal.toFixed(2);
-    
+
         // Update Grand Total
         updateGrandTotal();
     }
-    
-    
-    
-    
+
+
+
+
     // Grand total update function
     function updateGrandTotal() {
         let grandTotal = 0;
-    
+
         // Calculate subtotal sum
         document.querySelectorAll(".subtotal").forEach(function (item) {
               grandTotal += parseFloat(item.textContent) || 0;
         });
-    
+
         // Get discount and shipping values
         let discount = parseFloat(document.getElementById("inputDiscount").value) || 0;
         let shipping = parseFloat(document.getElementById("inputShipping").value) || 0;
-    
+
         // Apply discount and add shipping cost
         grandTotal = grandTotal - discount + shipping;
-    
+
         // Ensure grand total is not negative
         if (grandTotal < 0) {
               grandTotal = 0;
         }
-    
+
         // Update Grand Total display
         document.getElementById("grandTotal").textContent = `TK ${grandTotal.toFixed(2)}`;
-    
+
         document.querySelector("input[name='grand_total']").value = grandTotal.toFixed(2);
-    
+
+        updateDueAmount();
     }
 
 
+    /////Manage due_amount for sale page
+    function updateDueAmount(){
+        let grandTotal = parseFloat(document.querySelector("input[name='grand_total']").value) || 0;
+        let paidAmount = parseFloat(document.querySelector("input[name='paid_amount']").value) || 0;
+        //new add full paid functionality
+        let fullPaidAmount = parseFloat(document.querySelector("input[name='full_amount']").value) || 0;
+
+        if(paidAmount < 0){
+            paidAmount = 0;
+            document.querySelector("input[name='paid_amount']").value = 0;
+        }
+
+        //new add full paid functionality
+        if(fullPaidAmount < 0){
+            fullPaidAmount = 0;
+            document.querySelector("input[name='full_amount']").value = 0;
+        }
+
+        //calculate due amount
+        //  let dueAmount = grandTotal - paidAmount;
+
+        //new add full paid functionality
+        let dueAmount = grandTotal - (paidAmount + fullPaidAmount);
+
+        if(dueAmount < 0){
+            dueAmount = 0;
+        }
+        document.getElementById("dueAmount").textContent = `TK ${dueAmount.toFixed(2)}`;
+        document.querySelector("input[name='due_amount']").value = dueAmount.toFixed(2);
+    }
+
+
+    //Event listeners for discount and shipping input change
+    document.getElementById("inputDiscount").addEventListener("input", updateGrandTotal);
+    document.getElementById("inputShipping").addEventListener("input", updateGrandTotal);
+    document.querySelector("input[name='paid_amount']").addEventListener("input", updateDueAmount);
+    //new add full paid functionality
+    document.querySelector("input[name='full_amount']").addEventListener("input", updateDueAmount);
+
+
+
     ////// Start Modal  ///////////////////
- 
+
     // this is modal, instead to html
     let modal = document.createElement("div");
     modal.id = "customModal";
@@ -326,7 +368,7 @@ document.addEventListener("DOMContentLoaded", function(){
     document.getElementById("inputDiscount").addEventListener("input", updateGrandTotal);
     document.getElementById("inputShipping").addEventListener("input", updateGrandTotal);
 
-  
+
     document.getElementById("inputDiscount").addEventListener("input", function () {
         document.getElementById("displayDiscount").textContent = this.value || 0;
     });

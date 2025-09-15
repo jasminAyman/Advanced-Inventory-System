@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\PurchaseController;
 use App\Http\Controllers\Backend\ReturnPurchaseController;
+use App\Http\Controllers\Backend\SaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -152,6 +153,22 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/details/return/purchase/{id}', 'DetailsReturnPurchase')->name('details.return.purchase');
         Route::get('/invoice/return/purchase/{id}', 'InvoiceReturnPurchase')->name('invoice.return.purchase'); //to print purchase as pdf
+    });
+/*...................................................................................... */
+//sale routes
+    Route::controller(SaleController::class)->group(function () {
+        Route::get('/all/sale', 'AllSale')->name('all.sale');
+
+        Route::get('/add/sale', 'AddSales')->name('add.sale');
+        Route::post('/store/sale', 'StoreSales')->name('store.sale');
+
+        Route::get('/edit/sale/{id}', 'EditSale')->name('edit.sale');
+        Route::post('/update/sale/{id}', 'UpdateSale')->name('update.sale');
+
+        Route::get('/delete/sale/{id}', 'DeleteSale')->name('delete.sale');
+
+        Route::get('/details/sale/{id}', 'DetailsSales')->name('details.sale');
+        Route::get('/invoice/sale/{id}', 'InvoiceSales')->name('invoice.sale'); //to print sale as pdf
     });
 
 });
