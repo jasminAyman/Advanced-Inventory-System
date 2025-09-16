@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnItem;
+use App\Models\Sale;
+use App\Models\SaleItem;
 use App\Models\ProductCategory;
 use App\Models\Product;
 use App\Models\Customer;
@@ -208,4 +210,21 @@ class SaleReturnController extends Controller
     }
     //End Method
 
+////////////////// Due sale and sale Return manage///////////
+
+    public function DueSale(){
+        $sales = Sale::with(['customer','warehouse'])->select('id','customer_id','warehouse_id','due_amount')
+            ->where('due_amount', '>', 0)->get();
+
+        return view('admin.backend.due.sale_due', compact('sales'));    
+    }
+    //End Method
+
+    public function DueSaleReturn(){
+        $salesReturn = SaleReturn::with(['customer','warehouse'])->select('id','customer_id','warehouse_id','due_amount')
+            ->where('due_amount', '>', 0)->get();
+        
+        return view('admin.backend.due.sale_return_due', compact('salesReturn'));
+    }
+    //End Method
 }

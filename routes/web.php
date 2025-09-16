@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\PurchaseController;
 use App\Http\Controllers\Backend\ReturnPurchaseController;
 use App\Http\Controllers\Backend\SaleController;
 use App\Http\Controllers\Backend\SaleReturnController;
+use App\Http\Controllers\Backend\TransferController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -186,6 +187,13 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/details/return/sale/{id}', 'DetailsSalesReturn')->name('details.return.sale');
         Route::get('/invoice/return/sale/{id}', 'InvoiceSalesReturn')->name('invoice.return.sale'); //to print sale as pdf
+    });
+/*...................................................................................... */
+//due setup routes
+    Route::controller(SaleReturnController::class)->group(function () {
+        Route::get('/due/sale', 'DueSale')->name('due.sale');
+        Route::get('/due/sale/return', 'DueSaleReturn')->name('due.sale.return');
+
     });
 
 });
