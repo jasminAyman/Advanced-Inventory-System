@@ -12,6 +12,7 @@ use App\Http\Controllers\Backend\ReturnPurchaseController;
 use App\Http\Controllers\Backend\SaleController;
 use App\Http\Controllers\Backend\SaleReturnController;
 use App\Http\Controllers\Backend\TransferController;
+use App\Http\Controllers\Backend\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -209,6 +210,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/delete/transfer/{id}', 'DeleteTransfer')->name('delete.transfer');
 
         Route::get('/details/transfer/{id}', 'DetailsTransfer')->name('details.transfer');
+
+    });
+/*...................................................................................... */
+//report setup routes
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('/all/report', 'AllReport')->name('all.report');
+        Route::get('/purchase/return/report', 'PurchaseReturnReport')->name('purchase.return.report');
+        Route::get('/filter-purchases', 'FilterPurchases')->name('filter-purchases');
+
+        Route::get('/sale/report', 'SaleReport')->name('sale.report');
+        Route::get('/filter-sales', 'FilterSales')->name('filter-sales');
+        Route::get('/sale/return/report', 'SaleReturnReport')->name('sale.return.report');
+
+        Route::get('/product/stock/report', 'ProductStockReport')->name('product.stock.report');
 
     });
 
