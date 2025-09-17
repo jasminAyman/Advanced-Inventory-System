@@ -48,8 +48,8 @@
         <td>{{ $item['warehouse']['name'] }}</td>
         <td>{{ $item->status }}</td>
         <td>${{ $item->grand_total }}</td>
-        <td>${{ $item->paid_amount }}</td>
-        <td>${{ $item->due_amount }}</td>
+         <td><h4> <span class="badge text-bg-info">${{ $item->paid_amount }}</span> </h4></td>
+        <td><h4> <span class="badge text-bg-secondary">${{ $item->due_amount }}</span> </h4></td>
         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}</td>
         <td>
             <a title="Details" href="{{ route('details.return.sale',$item->id) }}" class="btn btn-info btn-sm"> <span class="mdi mdi-eye-circle mdi-18px"></span> </a>

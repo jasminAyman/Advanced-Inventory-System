@@ -195,5 +195,21 @@ Route::middleware('auth')->group(function () {
         Route::get('/due/sale/return', 'DueSaleReturn')->name('due.sale.return');
 
     });
+/*...................................................................................... */
+//transfer setup routes
+    Route::controller(TransferController::class)->group(function () {
+        Route::get('/all/transfer', 'AllTransfer')->name('all.transfer');
+
+        Route::get('/add/transfer', 'AddTransfer')->name('add.transfer');
+        Route::post('/store/transfer', 'StoreTransfer')->name('store.transfer');
+
+        Route::get('/edit/transfer/{id}', 'EditTransfer')->name('edit.transfer');
+        Route::post('/update/transfer/{id}', 'UpdateTransfer')->name('update.transfer');
+
+        Route::get('/delete/transfer/{id}', 'DeleteTransfer')->name('delete.transfer');
+
+        Route::get('/details/transfer/{id}', 'DetailsTransfer')->name('details.transfer');
+
+    });
 
 });
